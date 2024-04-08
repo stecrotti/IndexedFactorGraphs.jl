@@ -4,7 +4,7 @@ const Variable = Right
 """
     FactorGraphVertex
 
-A type to represent a vertex in a bipartite graph, to be passed as an argument to [`neighbors`](@ref), see examples therein.
+A type to represent a vertex in a bipartite graph, to be passed as an argument to [`neighbors`](@ref), [`inedges`](@ref), [`outedges`](@ref), see examples therein.
 It is recommended to use the [`variable`](@ref) and [`factor`](@ref) constructors.
 """
 const FactorGraphVertex = BipartiteGraphVertex
@@ -12,14 +12,14 @@ const FactorGraphVertex = BipartiteGraphVertex
 """
     factor(a::Integer)
 
-Wraps index `a` in a container such that other functions like [`neighbors`](@ref) know that it indices a factor node.
+Wraps index `a` in a container such that other functions like [`neighbors`](@ref), [`inedges`](@ref), [`outedges`](@ref), knowing that it indices a factor node.
 """
 factor(a::Integer) = vertex(a, Factor)
 
 """
     variable(i::Integer)
 
-Wraps index `i` in a container such that other functions like [`neighbors`](@ref) know that it indices a variable node.
+Wraps index `i` in a container such that other functions like [`neighbors`](@ref), [`inedges`](@ref), [`outedges`](@ref), knowing that it indices a variable node.
 """
 variable(i::Integer) = vertex(i, Variable)
 
@@ -130,6 +130,7 @@ function IndexedGraphs.neighbors(g::FactorGraph, i::FactorGraphVertex{Variable})
     return @view g.g.A.rowval[nzrange(g.g.A, i.i)]
 end
 
+
 """
     IndexedGraphs.edge_indices(g::FactorGraph, v::FactorGraphVertex)
 
@@ -141,21 +142,24 @@ Examples
 ========
 
 ```jldoctest edge_indices
-julia> using FactorGraphs, Random
+julia> using FactorGraphs, Test
 
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;
                         0 0 1 1])
 FactorGraph{Int64} with 3 factors, 4 variables and 5 edges
 
-julia> edgeprops = randn(MersenneTwister(0), ne(g));
+julia> edgeprops = randn(ne(g));
 
-julia> indices = edge_indices(g, variable(3));
+julia> indices = (idx(e) for e in outedges(g, variable(3)));
 
-julia> edgeprops[indices]
-2-element Vector{Float64}:
- -0.3530074003005963
- -0.13485387193052173
+julia> indices_noalloc = edge_indices(g, variable(3));
+
+julia> @assert edgeprops[collect(indices)] == edgeprops[indices_noalloc]
+
+julia> @test_throws ArgumentError edgeprops[indices]
+Test Passed
+      Thrown: ArgumentError
 ```
 """
 function edge_indices(g::FactorGraph, a::FactorGraphVertex{Factor})
@@ -164,6 +168,76 @@ end
 function edge_indices(g::FactorGraph, i::FactorGraphVertex{Variable})
     return nzrange(g.g.A, i.i)
 end
+
+
+"""
+    IndexedGraphs.inedges(g::FactorGraph, v::FactorGraphVertex)
+
+Return a lazy iterators to the edges incident on vertex `v`, with `v` as the destination.
+
+Examples
+========
+
+```jldoctest inedges
+julia> using FactorGraphs
+
+julia> g = FactorGraph([0 1 1 0;
+                        1 0 0 0;
+                        0 0 1 1])
+FactorGraph{Int64} with 3 factors, 4 variables and 5 edges
+
+julia> collect(inedges(g, factor(2)))
+1-element Vector{IndexedGraphs.IndexedEdge{Int64}}:
+ Indexed Edge 1 => 2 with index 1
+
+
+julia> collect(inedges(g, variable(3)))
+2-element Vector{IndexedGraphs.IndexedEdge{Int64}}:
+ Indexed Edge 1 => 3 with index 3
+ Indexed Edge 3 => 3 with index 4
+```
+"""
+function IndexedGraphs.inedges(g::FactorGraph, a::FactorGraphVertex{Factor})
+    return (IndexedEdge(i, a.i, id) for (i, id) in zip(neighbors(g, a), edge_indices(g, a)))
+end
+function IndexedGraphs.inedges(g::FactorGraph, i::FactorGraphVertex{Variable})
+    return (IndexedEdge(a, i.i, id) for (a, id) in zip(neighbors(g, i), edge_indices(g, i)))
+
+end
+
+"""
+    IndexedGraphs.outedges(g::FactorGraph, v::FactorGraphVertex)
+
+Return a lazy iterators to the edges incident on vertex `v`, with `v` as the source.
+
+Examples
+========
+
+```jldoctest outedges
+julia> using FactorGraphs
+
+julia> g = FactorGraph([0 1 1 0;
+                        1 0 0 0;
+                        0 0 1 1])
+FactorGraph{Int64} with 3 factors, 4 variables and 5 edges
+
+julia> collect(outedges(g, factor(2)))
+1-element Vector{IndexedGraphs.IndexedEdge{Int64}}:
+ Indexed Edge 2 => 1 with index 1
+
+julia> collect(outedges(g, variable(3)))
+2-element Vector{IndexedGraphs.IndexedEdge{Int64}}:
+ Indexed Edge 3 => 1 with index 3
+ Indexed Edge 3 => 3 with index 4
+```
+"""
+function IndexedGraphs.outedges(g::FactorGraph, a::FactorGraphVertex{Factor})
+    return (IndexedEdge(a.i, i, id) for (i, id) in zip(neighbors(g, a), edge_indices(g, a)))
+end
+function IndexedGraphs.outedges(g::FactorGraph, i::FactorGraphVertex{Variable})
+    return (IndexedEdge(i.i, a, id) for (a, id) in zip(neighbors(g, i), edge_indices(g, i)))
+end
+
 
 """
     edges(g::FactorGraph)
@@ -195,10 +269,12 @@ end
 function IndexedGraphs.degree(g::FactorGraph, v::FactorGraphVertex)
     return degree(g.g, linearindex(g.g, v))
 end
-function IndexedGraphs.degree(g::FactorGraph, i::Integer)
+function IndexedGraphs.degree(::FactorGraph, ::Integer)
     return throw(ArgumentError("Properties of a vertex of a `FactorGraph` such as degree, neighbors, etc. cannot be accessed using an integer. Use a `FactorGraphVertex` instead."))
 end
 
-IndexedGraphs.adjacency_matrix(g::FactorGraph, T::DataType=Int) = g.g.A
+function IndexedGraphs.adjacency_matrix(g::FactorGraph, T::DataType=Int)
+    SparseMatrixCSC(g.g.A.m, g.g.A.n, g.g.A.colptr, g.g.A.rowval, ones(T, nnz(g.g.A)))
+end
 
 Graphs.is_cyclic(g::FactorGraph) = is_cyclic(g.g)

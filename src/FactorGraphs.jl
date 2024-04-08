@@ -13,11 +13,9 @@ using Graphs
 
 using FillArrays: Fill
 
-using SparseArrays: sparse, SparseMatrixCSC, nzrange
+using SparseArrays: sparse, SparseMatrixCSC, nzrange, nnz
 using Random: AbstractRNG, default_rng
 using StatsBase: sample
-
-abstract type AbstractFactorGraph{T} end
 
 include("factorgraph.jl")
 include("generators.jl")
@@ -26,7 +24,7 @@ include("regular_factorgraph.jl")
 export FactorGraph, nvariables, nfactors, variables, factors, factor, variable,
     pairwise_interaction_graph,
     neighbors, edges, src, dst, idx, ne, nv, degree,
-    edge_indices,
+    edge_indices, inedges, outedges,
     adjacency_matrix, is_cyclic
 export rand_factor_graph, rand_regular_factor_graph, rand_tree_factor_graph
 export RegularFactorGraph

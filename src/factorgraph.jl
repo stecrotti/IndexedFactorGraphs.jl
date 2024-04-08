@@ -106,7 +106,7 @@ Examples
 ========
 
 ```jldoctest neighbors
-julia> using BeliefPropagation.FactorGraphs
+julia> using FactorGraphs
 
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;
@@ -141,7 +141,7 @@ Examples
 ========
 
 ```jldoctest edge_indices
-julia> using BeliefPropagation.FactorGraphs, Random
+julia> using FactorGraphs, Random
 
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;
@@ -171,7 +171,7 @@ end
 Return a lazy iterator to the edges of `g`, with the convention that the source is the factor and the destination is the variable
 
 ```jldoctest edges
-julia> using BeliefPropagation.FactorGraphs
+julia> using FactorGraphs
 
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;

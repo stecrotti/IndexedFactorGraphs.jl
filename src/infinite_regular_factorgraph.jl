@@ -4,13 +4,13 @@
 A type to represent an infinite regular factor graph with fixed factor and variable degree
 """
 struct InfinteRegularFactorGraph{T<:Integer} <: AbstractFactorGraph{T}
-    kₐ :: T   # factor degree
     kᵢ :: T   # variable degree
+    kₐ :: T   # factor degree
 
     function InfinteRegularFactorGraph(kₐ::T, kᵢ::T) where {T<:Integer}
-        kₐ > 0 || throw(ArgumentError("Factor degree must be positive, got $kₐ"))
         kᵢ > 0 || throw(ArgumentError("Factor degree must be positive, got $kᵢ"))
-        return new{T}(kₐ, kᵢ)
+        kₐ > 0 || throw(ArgumentError("Factor degree must be positive, got $kₐ"))
+        return new{T}(kᵢ, kₐ)
     end
 end
 

@@ -18,6 +18,10 @@ g = FactorGraph(A)
     @test all(all(dst(e)==i for (e,i) in zip(outedges(g, factor(a)), neighbors(g, factor(a)))) for a in factors(g))
 
     @test_throws ArgumentError degree(g, 1)
+    @test_throws ArgumentError neighbors(g, 1)
+    @test_throws ArgumentError inedges(g, 1)
+    @test_throws ArgumentError outedges(g, 1)
+    @test_throws ArgumentError edge_indices(g, 1)
 end    
 
 @testset "Broadcasting" begin

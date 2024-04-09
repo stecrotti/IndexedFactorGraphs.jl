@@ -50,3 +50,8 @@ end
         idx.(collect(inedges(g, factor(a)))) == edge_indices(g, factor(a))
     end
 end
+
+@testset "Adjacency matrix" begin
+    M = adjacency_matrix(g)
+    @test M == ((!=)(0)).(A)
+end

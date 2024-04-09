@@ -64,7 +64,7 @@ function Base.show(io::IO, g::FactorGraph{T}) where T
     nfact = nfactors(g)
     nvar = nvariables(g)
     ned = ne(g)
-    println(io, "FactorGraph{$T} with $nfact factors, $nvar variables and $ned edges")
+    println(io, "FactorGraph{$T} with $nvar variables, $nfact factors, and $ned edges")
 end
 
 """
@@ -111,7 +111,7 @@ julia> using FactorGraphs
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;
                         0 0 1 1])
-FactorGraph{Int64} with 3 factors, 4 variables and 5 edges
+FactorGraph{Int64} with 4 variables, 3 factors, and 5 edges
 
 julia> collect(neighbors(g, variable(3)))
 2-element Vector{Int64}:
@@ -147,7 +147,7 @@ julia> using FactorGraphs, Test
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;
                         0 0 1 1])
-FactorGraph{Int64} with 3 factors, 4 variables and 5 edges
+FactorGraph{Int64} with 4 variables, 3 factors, and 5 edges
 
 julia> edgeprops = randn(ne(g));
 
@@ -184,7 +184,7 @@ julia> using FactorGraphs
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;
                         0 0 1 1])
-FactorGraph{Int64} with 3 factors, 4 variables and 5 edges
+FactorGraph{Int64} with 4 variables, 3 factors, and 5 edges
 
 julia> collect(inedges(g, factor(2)))
 1-element Vector{IndexedGraphs.IndexedEdge{Int64}}:
@@ -219,7 +219,7 @@ julia> using FactorGraphs
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;
                         0 0 1 1])
-FactorGraph{Int64} with 3 factors, 4 variables and 5 edges
+FactorGraph{Int64} with 4 variables, 3 factors, and 5 edges
 
 julia> collect(outedges(g, factor(2)))
 1-element Vector{IndexedGraphs.IndexedEdge{Int64}}:
@@ -250,7 +250,7 @@ julia> using FactorGraphs
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;
                         0 0 1 1])
-FactorGraph{Int64} with 3 factors, 4 variables and 5 edges
+FactorGraph{Int64} with 4 variables, 3 factors, and 5 edges
 
 julia> collect(edges(g))
 5-element Vector{IndexedGraphs.IndexedEdge{Int64}}:
@@ -269,8 +269,13 @@ end
 function IndexedGraphs.degree(g::FactorGraph, v::FactorGraphVertex)
     return degree(g.g, linearindex(g.g, v))
 end
-function IndexedGraphs.degree(::FactorGraph, ::Integer)
-    return throw(ArgumentError("Properties of a vertex of a `FactorGraph` such as degree, neighbors, etc. cannot be accessed using an integer. Use a `FactorGraphVertex` instead."))
+
+for method in [:(IndexedGraphs.degree), :(IndexedGraphs.inedges), :(IndexedGraphs.outedges), :(IndexedGraphs.neighbors), :(edge_indices)]
+    @eval begin
+        function $method(::AbstractFactorGraph, ::Integer)
+            return throw(ArgumentError("Properties of a vertex of an `AbstractFactorGraph` such as degree, neighbors, etc. cannot be accessed by an integer. Use a `variable` or `factor` wrapper instead.\n"))
+        end
+    end
 end
 
 function IndexedGraphs.adjacency_matrix(g::FactorGraph, T::DataType=Int)

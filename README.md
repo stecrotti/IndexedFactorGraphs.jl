@@ -9,7 +9,7 @@ A Julia package to work with [factor graphs](https://en.wikipedia.org/wiki/Facto
 
 ## Installation
 ```julia
-julia> ]add https://github.com/stecrotti/FactorGraphs.jl
+julia> import Pkg; Pkg.add(url="https://github.com/stecrotti/FactorGraphs.jl")
 ```
 
 ## Basics

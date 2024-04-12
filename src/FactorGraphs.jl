@@ -27,6 +27,6 @@ export FactorGraph, nvariables, nfactors, variables, factors, factor, variable,
     edge_indices, inedges, outedges,
     adjacency_matrix, is_cyclic
 export rand_factor_graph, rand_regular_factor_graph, rand_tree_factor_graph
-export InfinteRegularFactorGraph
+export InfiniteRegularFactorGraph
 
 end

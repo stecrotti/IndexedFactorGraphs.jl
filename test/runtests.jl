@@ -12,9 +12,8 @@ using Random
     Aqua.test_ambiguities(FactorGraphs)
 end
 
-@testset "FactorGraphs" begin
-    include("factorgraph.jl")
-    include("generators.jl")
-end
+include("factorgraph.jl")
+include("generators.jl")
+include("infinite_regular_factorgraph.jl")
 
 nothing

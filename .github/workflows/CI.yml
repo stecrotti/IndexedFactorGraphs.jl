@@ -64,6 +64,6 @@ jobs:
       - run: |
           julia --project=docs -e '
             using Documenter: DocMeta, doctest
-            using FactorGraphs
-            DocMeta.setdocmeta!(FactorGraphs, :DocTestSetup, :(using FactorGraphs); recursive=true)
-            doctest(FactorGraphs)'
+            using IndexedFactorGraphs
+            DocMeta.setdocmeta!(IndexedFactorGraphs, :DocTestSetup, :(using IndexedFactorGraphs); recursive=true)
+            doctest(IndexedFactorGraphs)'

@@ -61,3 +61,8 @@ Querying properties of a vertex without specifying whether it's a variable or a 
 julia> outedges(g, 3)
 ERROR: ArgumentError: Properties of a vertex of an `AbstractFactorGraph` such as degree, neighbors, etc. cannot be accessed by an integer. Use a `variable` or `factor` wrapper instead.
 ```
+
+## See also
+For less lightweight implementations, also including message-passing algorithms, check out
+* [FactorGraph.jl](https://github.com/mcosovic/FactorGraph.jl)
+* [ForneyLab.jl](https://github.com/biaslab/ForneyLab.jl)

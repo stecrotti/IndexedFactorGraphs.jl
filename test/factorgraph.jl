@@ -5,12 +5,12 @@ A = sprand(rng, m, n, 0.1)
 g = FactorGraph(A)
 
 @testset "Basics" begin
-    @test nfactors(g) == m
-    @test nvariables(g) == n
-    @test all(degree(g, factor(a)) == length(neighbors(g,factor(a))) for a in factors(g))
-    @test all(degree(g, variable(i)) == length(neighbors(g,variable(i))) for i in variables(g))
+    @test @inferred nfactors(g) == m
+    @test @inferred nvariables(g) == n
+    @test all(@inferred degree(g, factor(a)) == length(@inferred neighbors(g,factor(a))) for a in factors(g))
+    @test all(@inferred degree(g, variable(i)) == length(@inferred neighbors(g,variable(i))) for i in variables(g))
 
-    @test length(collect(edges(g))) == ne(g)
+    @test length(collect(@inferred edges(g))) == @inferred ne(g)
 
     @test all(all(src(e)==a for (e,a) in zip(inedges(g, variable(i)), neighbors(g, variable(i)))) for i in variables(g))
     @test all(all(src(e)==i for (e,i) in zip(inedges(g, factor(a)), neighbors(g, factor(a)))) for a in factors(g))
@@ -23,6 +23,10 @@ g = FactorGraph(A)
     @test_throws ArgumentError outedges(g, 1)
     @test_throws ArgumentError edge_indices(g, 1)
 end    
+
+@testset "Type inference" begin
+    test_type_inference(g)
+end 
 
 @testset "Broadcasting" begin
     ids = [variable(i) for i in rand(1:nvariables(g), 5)]

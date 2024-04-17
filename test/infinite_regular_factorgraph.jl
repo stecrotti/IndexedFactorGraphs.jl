@@ -15,6 +15,10 @@ g = InfiniteRegularFactorGraph(kᵢ, kₐ)
     end
 end
 
+@testset "Type inference" begin
+    test_type_inference(g)
+end 
+
 @testset "Edge indices" begin
     @test all(variables(g)) do i
         idx.(collect(inedges(g, variable(i)))) == edge_indices(g, variable(i))

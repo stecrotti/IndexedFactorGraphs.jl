@@ -1,4 +1,4 @@
-using FactorGraphs
+using IndexedFactorGraphs
 using Test
 using Aqua
 using Graphs
@@ -8,8 +8,8 @@ using Random
 
 
 @testset "Code quality (Aqua.jl)" begin
-    Aqua.test_all(FactorGraphs; ambiguities = false,)
-    Aqua.test_ambiguities(FactorGraphs)
+    Aqua.test_all(IndexedFactorGraphs; ambiguities = false,)
+    Aqua.test_ambiguities(IndexedFactorGraphs)
 end
 
 """

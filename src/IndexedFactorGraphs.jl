@@ -1,4 +1,4 @@
-module FactorGraphs
+module IndexedFactorGraphs
 
 using IndexedGraphs:
     IndexedGraphs, 

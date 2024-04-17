@@ -106,7 +106,7 @@ Examples
 ========
 
 ```jldoctest neighbors
-julia> using FactorGraphs
+julia> using IndexedFactorGraphs
 
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;
@@ -142,7 +142,7 @@ Examples
 ========
 
 ```jldoctest edge_indices
-julia> using FactorGraphs, Test
+julia> using IndexedFactorGraphs, Test
 
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;
@@ -179,7 +179,7 @@ Examples
 ========
 
 ```jldoctest inedges
-julia> using FactorGraphs
+julia> using IndexedFactorGraphs
 
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;
@@ -214,7 +214,7 @@ Examples
 ========
 
 ```jldoctest outedges
-julia> using FactorGraphs
+julia> using IndexedFactorGraphs
 
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;
@@ -245,7 +245,7 @@ end
 Return a lazy iterator to the edges of `g`, with the convention that the source is the factor and the destination is the variable
 
 ```jldoctest edges
-julia> using FactorGraphs
+julia> using IndexedFactorGraphs
 
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;

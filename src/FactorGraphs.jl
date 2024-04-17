@@ -18,7 +18,7 @@ include("factorgraph.jl")
 include("generators.jl")
 include("infinite_regular_factorgraph.jl")
 
-export FactorGraph, nvariables, nfactors, variables, factors, factor, variable,
+export AbstractFactorGraph, FactorGraph, nvariables, nfactors, variables, factors, factor, variable,
     pairwise_interaction_graph,
     neighbors, edges, src, dst, idx, ne, nv, degree,
     edge_indices, inedges, outedges,

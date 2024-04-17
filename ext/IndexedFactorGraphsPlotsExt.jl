@@ -1,6 +1,6 @@
-module FactorGraphsPlotsExt
+module IndexedFactorGraphsPlotsExt
 
-using FactorGraphs
+using IndexedFactorGraphs
 using Plots, GraphRecipes
 
 """
@@ -18,7 +18,7 @@ Examples
 ========
 
 ```@example plot
-julia> using FactorGraphs
+julia> using IndexedFactorGraphs
 
 julia> using Plots, GraphRecipes
 

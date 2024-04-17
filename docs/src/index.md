@@ -1,19 +1,18 @@
 ```@meta
-EditURL = "https://github.com/stecrotti/FactorGraphs.jl/blob/main/README.md"
+EditURL = "https://github.com/stecrotti/IndexedFactorGraphs.jl/blob/main/README.md"
 ```
 
-# FactorGraphs
+# IndexedFactorGraphs
 
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://stecrotti.github.io/FactorGraphs.jl/stable)
-[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://stecrotti.github.io/FactorGraphs.jl/dev)
-[![Build Status](https://github.com/stecrotti/FactorGraphs.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/stecrotti/FactorGraphs.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![codecov](https://codecov.io/gh/stecrotti/FactorGraphs.jl/graph/badge.svg?token=nGaGg7oJom)](https://codecov.io/gh/stecrotti/FactorGraphs.jl)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://stecrotti.github.io/IndexedFactorGraphs.jl/dev)
+[![Build Status](https://github.com/stecrotti/IndexedFactorGraphs.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/stecrotti/IndexedFactorGraphs.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![codecov](https://codecov.io/gh/stecrotti/IndexedFactorGraphs.jl/graph/badge.svg?token=nGaGg7oJom)](https://codecov.io/gh/stecrotti/IndexedFactorGraphs.jl)
 
 A Julia package to work with [factor graphs](https://en.wikipedia.org/wiki/Factor_graph).
 
 ## Installation
 ```julia
-julia> ]add https://github.com/stecrotti/FactorGraphs.jl
+julia> import Pkg; Pkg.add(url="https://github.com/stecrotti/IndexedFactorGraphs.jl")
 ```
 
 ## Basics
@@ -23,7 +22,7 @@ In the spirit of [IndexedGraphs.jl](https://github.com/stecrotti/IndexedGraphs.j
 ### Graph construction
 A `FactorGraph` can be constructed starting from an adjacency matrix, with the convention that rows represent factor vertices and columns represent variable vertices
 ```julia
-julia> using FactorGraphs
+julia> using IndexedFactorGraphs
 
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;
@@ -66,3 +65,8 @@ Querying properties of a vertex without specifying whether it's a variable or a 
 julia> outedges(g, 3)
 ERROR: ArgumentError: Properties of a vertex of an `AbstractFactorGraph` such as degree, neighbors, etc. cannot be accessed by an integer. Use a `variable` or `factor` wrapper instead.
 ```
+
+## See also
+For less lightweight implementations, also including message-passing algorithms, check out
+* [FactorGraph.jl](https://github.com/mcosovic/FactorGraph.jl)
+* [ForneyLab.jl](https://github.com/biaslab/ForneyLab.jl)

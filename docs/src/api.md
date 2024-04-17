@@ -1,5 +1,5 @@
 ```@meta
-CurrentModule = FactorGraphs
+CurrentModule = IndexedFactorGraphs
 ```
 
 # API reference
@@ -7,8 +7,8 @@ CurrentModule = FactorGraphs
 ## Docstrings
 
 ```@autodocs
-Modules = [FactorGraphs,
-    Base.get_extension(FactorGraphs, :FactorGraphsPlotsExt),
+Modules = [IndexedFactorGraphs,
+    Base.get_extension(IndexedFactorGraphs, :IndexedFactorGraphsPlotsExt),
     ]
 ```
 

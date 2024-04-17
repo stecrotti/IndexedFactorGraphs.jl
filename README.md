@@ -1,14 +1,14 @@
-# FactorGraphs
+# IndexedFactorGraphs
 
-[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://stecrotti.github.io/FactorGraphs.jl/dev)
-[![Build Status](https://github.com/stecrotti/FactorGraphs.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/stecrotti/FactorGraphs.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![codecov](https://codecov.io/gh/stecrotti/FactorGraphs.jl/graph/badge.svg?token=nGaGg7oJom)](https://codecov.io/gh/stecrotti/FactorGraphs.jl)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://stecrotti.github.io/IndexedFactorGraphs.jl/dev)
+[![Build Status](https://github.com/stecrotti/IndexedFactorGraphs.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/stecrotti/IndexedFactorGraphs.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![codecov](https://codecov.io/gh/stecrotti/IndexedFactorGraphs.jl/graph/badge.svg?token=nGaGg7oJom)](https://codecov.io/gh/stecrotti/IndexedFactorGraphs.jl)
 
 A Julia package to work with [factor graphs](https://en.wikipedia.org/wiki/Factor_graph).
 
 ## Installation
 ```julia
-julia> import Pkg; Pkg.add(url="https://github.com/stecrotti/FactorGraphs.jl")
+julia> import Pkg; Pkg.add(url="https://github.com/stecrotti/IndexedFactorGraphs.jl")
 ```
 
 ## Basics
@@ -18,7 +18,7 @@ In the spirit of [IndexedGraphs.jl](https://github.com/stecrotti/IndexedGraphs.j
 ### Graph construction
 A `FactorGraph` can be constructed starting from an adjacency matrix, with the convention that rows represent factor vertices and columns represent variable vertices
 ```julia
-julia> using FactorGraphs
+julia> using IndexedFactorGraphs
 
 julia> g = FactorGraph([0 1 1 0;
                         1 0 0 0;

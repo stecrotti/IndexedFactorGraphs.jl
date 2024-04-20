@@ -8,7 +8,7 @@ A Julia package to work with [factor graphs](https://en.wikipedia.org/wiki/Facto
 
 ## Installation
 ```julia
-julia> import Pkg; Pkg.add(url="https://github.com/stecrotti/IndexedFactorGraphs.jl")
+julia> using Pkg; Pkg.add("IndexedFactorGraphs")
 ```
 
 ## Basics

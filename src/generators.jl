@@ -10,19 +10,8 @@ function rand_factor_graph(rng::AbstractRNG, nvar::Integer, nfact::Integer, ned:
     nedmax = nvar * nfact
     ned ≤ nedmax || throw(ArgumentError("Maximum number of edges is $nvar*$nfact=$nedmax, got $ned"))
 
-    I = zeros(Int, ned)
-    J = zeros(Int, ned)
-    K = ones(Int, ned)
-    n = 1
-    while n ≤ ned
-        I[n] = rand(rng, 1:nfact)
-        J[n] = rand(rng, 1:nvar)
-        if !any((i,j) == (I[n], J[n]) for (i,j) in Iterators.take(zip(I,J), n-1))
-            n += 1
-        end
-    end
-    A = sparse(I, J, K, nfact, nvar)
-    return FactorGraph(A)
+    g = rand_bipartite_graph(rng, nfact, nvar, ned)
+    return FactorGraph(g)
 end
 function rand_factor_graph(nvar::Integer, nfact::Integer, ned::Integer)
     rand_factor_graph(default_rng(), nvar, nfact, ned)
@@ -38,17 +27,8 @@ function rand_factor_graph(rng::AbstractRNG, nvar::Integer, nfact::Integer, p::R
     nfact > 0 || throw(ArgumentError("Number of factor nodes must be positive, got $nfact"))
     0 ≤ p ≤ 1 || throw(ArgumentError("Probability must be in [0,1], got $ned"))
 
-    I = zeros(Int, 0)
-    J = zeros(Int, 0)
-    for (a, i) in Iterators.product(1:nfact, 1:nvar)
-        if rand(rng) < p
-            push!(I, a)
-            push!(J, i)
-        end
-    end
-    K = ones(Int, length(I))
-    A = sparse(I, J, K, nfact, nvar)
-    return FactorGraph(A)
+    g = rand_bipartite_graph(rng, nfact, nvar, p)
+    return FactorGraph(g)
 end
 function rand_factor_graph(nvar::Integer, nfact::Integer, p::Real)
     rand_factor_graph(default_rng(), nvar, nfact, p)
@@ -66,11 +46,8 @@ function rand_regular_factor_graph(rng::AbstractRNG, nvar::Integer, nfact::Integ
     k > 0 || throw(ArgumentError("Degree `k` must be positive, got $k"))
     k ≤ nvar || throw(ArgumentError("Degree `k` must be smaller or equal than number of variables, got $k")) 
 
-    I = reduce(vcat, fill(a, k) for a in 1:nfact)
-    J = reduce(vcat, sample(rng, 1:nvar, k; replace=false) for _ in 1:nfact)
-    K = ones(Int, length(I))
-    A = sparse(I, J, K, nfact, nvar)
-    return FactorGraph(A)
+    g = rand_regular_bipartite_graph(rng, nfact, nvar, k)
+    return FactorGraph(g)
 end
 function rand_regular_factor_graph(nvar::Integer, nfact::Integer, k::Integer)
     rand_regular_factor_graph(default_rng(), nvar, nfact, k)
@@ -82,8 +59,7 @@ end
 Create a tree factor graph with `n` vertices in total. The proportion of variables/factors is casual.
 """
 function rand_tree_factor_graph(rng::AbstractRNG, n::Integer)
-    gg = prufer_decode(rand(rng, 1:n, n-2))
-    g = BipartiteIndexedGraph(gg)
+    g = rand_bipartite_tree(rng, n)
     return FactorGraph(g)
 end
 rand_tree_factor_graph(n::Integer) = rand_tree_factor_graph(default_rng(), n)

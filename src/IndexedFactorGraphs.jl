@@ -4,7 +4,8 @@ using IndexedGraphs:
     IndexedGraphs, 
     IndexedEdge, BipartiteIndexedGraph, BipartiteGraphVertex, NullNumber,
     src, dst, idx, edges, nv, ne, degree, linearindex, inedges, outedges, vertex,
-    nv_left, nv_right, vertex, Left, Right
+    nv_left, nv_right, vertex, Left, Right,
+    rand_bipartite_graph, rand_regular_bipartite_graph, rand_bipartite_tree
 
 using Graphs: Graphs, AbstractGraph, adjacency_matrix, neighbors, is_cyclic, prufer_decode
 

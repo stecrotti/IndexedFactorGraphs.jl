@@ -4,7 +4,7 @@
 [![Build Status](https://github.com/stecrotti/IndexedFactorGraphs.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/stecrotti/IndexedFactorGraphs.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![codecov](https://codecov.io/gh/stecrotti/IndexedFactorGraphs.jl/graph/badge.svg?token=nGaGg7oJom)](https://codecov.io/gh/stecrotti/IndexedFactorGraphs.jl)
 
-A Julia package to work with [factor graphs](https://en.wikipedia.org/wiki/Factor_graph).
+A Julia package to work with [factor graphs](https://en.wikipedia.org/wiki/Factor_graph), based on [IndexedGraphs.jl](https://github.com/stecrotti/IndexedGraphs.jl).
 
 ## Installation
 ```julia

@@ -16,6 +16,7 @@ end
 Check type inference for functions that are likely to be called in hot loops
 """
 function test_type_inference(g::AbstractFactorGraph)
+    all_edges = @inferred edge_indices(g)
     i = rand(rng, @inferred variables(g))
     a = rand(rng, @inferred factors(g))
     di = @inferred degree(g, @inferred variable(i))

@@ -132,9 +132,9 @@ end
 
 
 """
-    IndexedGraphs.edge_indices(g::FactorGraph, v::FactorGraphVertex)
+    edge_indices(g::FactorGraph, v::FactorGraphVertex)
 
-Return a lazy iterators to the indices of the edges incident on vertex `v`, with `v`.
+Return a lazy iterator to the indices of the edges incident on vertex `v`, with `v`.
 
 The output of `edge_indices` does not allocate and it can be used to index external arrays of properties directly
 
@@ -168,6 +168,13 @@ end
 function edge_indices(g::FactorGraph, i::FactorGraphVertex{Variable})
     return nzrange(g.g.A, i.i)
 end
+
+"""
+    edge_indices(g::FactorGraph)
+
+Return a lazy iterator to the indices of the edges in `g`
+"""
+edge_indices(g::AbstractFactorGraph) = 1:ne(g)
 
 
 """

@@ -53,10 +53,12 @@ end
 Construct a factor graph whose factors are the pair-wise interactions encoded in `g`.
 """
 function pairwise_interaction_graph(g::AbstractGraph)
-    I = reduce(vcat, [e, e] for e in 1:ne(g))
+    N = nv(g)
+    E = ne(g)
+    I = reduce(vcat, [e, e] for e in 1:E)
     J = reduce(vcat, [src(e), dst(e)] for e in edges(g)) 
     K = ones(Int, 2*ne(g))
-    A = sparse(I, J, K)
+    A = sparse(I, J, K, E, N)
     FactorGraph(A)
 end
 

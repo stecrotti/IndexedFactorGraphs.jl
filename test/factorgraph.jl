@@ -34,12 +34,14 @@ end
 end
 
 @testset "Pairwise interactions" begin
-    g_pairwise = Graphs.erdos_renyi(n, 0.1; seed=0)
+    g_pairwise = Graphs.erdos_renyi(n-1, 0.1; seed=0)
+    # to test on isolated nodes
+    add_vertex!(g_pairwise)
     g_factorgraph = pairwise_interaction_graph(g_pairwise)
-    @test all(1:n) do i
+    @test all(1:n-1) do i
         neigs_pairwise = neighbors(g_pairwise, i)
         neigs_factorgraph = reduce(vcat, neighbors(g_factorgraph, factor(a)) 
-            for a in neighbors(g_factorgraph, variable(i)))
+            for a in neighbors(g_factorgraph, variable(i)); init=Int[])
         unique!(neigs_factorgraph)
         filter!(!isequal(i), neigs_factorgraph)
         neigs_pairwise == neigs_factorgraph

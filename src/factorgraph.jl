@@ -1,27 +1,27 @@
-const Factor = Left
-const Variable = Right
+const FactorVertex = Left
+const VariableVertex = Right
 
 """
     FactorGraphVertex
 
 A type to represent a vertex in a bipartite graph, to be passed as an argument to [`neighbors`](@ref), [`inedges`](@ref), [`outedges`](@ref), see examples therein.
-It is recommended to use the [`variable`](@ref) and [`factor`](@ref) constructors.
+It is recommended to use the [`v_vertex`](@ref) and [`fvertex`](@ref) constructors.
 """
 const FactorGraphVertex = BipartiteGraphVertex
 
 """
-    factor(a::Integer)
+    f_vertex(a::Integer)
 
-Wraps index `a` in a container such that other functions like [`neighbors`](@ref), [`inedges`](@ref), [`outedges`](@ref), knowing that it indices a factor node.
+Wraps index `a` in a container such that other functions like [`neighbors`](@ref), [`inedges`](@ref), [`outedges`](@ref), knowing that it indices a factor vertex.
 """
-factor(a::Integer) = vertex(a, Factor)
+f_vertex(a::Integer) = vertex(a, FactorVertex)
 
 """
-    variable(i::Integer)
+    v_vertex(i::Integer)
 
-Wraps index `i` in a container such that other functions like [`neighbors`](@ref), [`inedges`](@ref), [`outedges`](@ref), knowing that it indices a variable node.
+Wraps index `i` in a container such that other functions like [`neighbors`](@ref), [`inedges`](@ref), [`outedges`](@ref), knowing that it indices a variable vertex.
 """
-variable(i::Integer) = vertex(i, Variable)
+v_vertex(i::Integer) = vertex(i, VariableVertex)
 
 abstract type AbstractFactorGraph{T} end
 
@@ -82,22 +82,23 @@ nvariables(g::FactorGraph) = nv_right(g.g)
 Return the number of actors vertices in `g`.
 """
 nfactors(g::FactorGraph) = nv_left(g.g)
+
 IndexedGraphs.nv(g::FactorGraph) = nv(g.g)
 IndexedGraphs.ne(g::FactorGraph) = ne(g.g)
 
 """
-    variables(g::FactorGraph)
+    v_vertices(g::FactorGraph)
 
 Return a lazy iterator to the indices of variable vertices in `g`.
 """
-variables(g::FactorGraph) = 1:nvariables(g)
+v_vertices(g::FactorGraph) = 1:nvariables(g)
 
 """
-    factors(g::FactorGraph)
+    f_vertices(g::FactorGraph)
 
 Return a lazy iterator to the indices of factor vertices in `g`.
 """
-factors(g::FactorGraph) = 1:nfactors(g)
+f_vertices(g::FactorGraph) = 1:nfactors(g)
 
 """
     IndexedGraphs.neighbors(g::FactorGraph, v::FactorGraphVertex)
@@ -115,20 +116,20 @@ julia> g = FactorGraph([0 1 1 0;
                         0 0 1 1])
 FactorGraph{Int64} with 4 variables, 3 factors, and 5 edges
 
-julia> collect(neighbors(g, variable(3)))
+julia> collect(neighbors(g, v_vertex(3)))
 2-element Vector{Int64}:
  1
  3
 
-julia> collect(neighbors(g, factor(2)))
+julia> collect(neighbors(g, f_vertex(2)))
 1-element Vector{Int64}:
  1
 ```
 """
-function IndexedGraphs.neighbors(g::FactorGraph, a::FactorGraphVertex{Factor})
+function IndexedGraphs.neighbors(g::FactorGraph, a::FactorGraphVertex{FactorVertex})
     return @view g.g.X.rowval[nzrange(g.g.X, a.i)]
 end
-function IndexedGraphs.neighbors(g::FactorGraph, i::FactorGraphVertex{Variable})
+function IndexedGraphs.neighbors(g::FactorGraph, i::FactorGraphVertex{VariableVertex})
     return @view g.g.A.rowval[nzrange(g.g.A, i.i)]
 end
 
@@ -153,9 +154,9 @@ FactorGraph{Int64} with 4 variables, 3 factors, and 5 edges
 
 julia> edgeprops = randn(ne(g));
 
-julia> indices = (idx(e) for e in outedges(g, variable(3)));
+julia> indices = (idx(e) for e in outedges(g, v_vertex(3)));
 
-julia> indices_noalloc = edge_indices(g, variable(3));
+julia> indices_noalloc = edge_indices(g, v_vertex(3));
 
 julia> @assert edgeprops[collect(indices)] == edgeprops[indices_noalloc]
 
@@ -164,10 +165,10 @@ Test Passed
       Thrown: ArgumentError
 ```
 """
-function edge_indices(g::FactorGraph, a::FactorGraphVertex{Factor})
+function edge_indices(g::FactorGraph, a::FactorGraphVertex{FactorVertex})
     return @view g.g.X.nzval[nzrange(g.g.X, a.i)]
 end
-function edge_indices(g::FactorGraph, i::FactorGraphVertex{Variable})
+function edge_indices(g::FactorGraph, i::FactorGraphVertex{VariableVertex})
     return nzrange(g.g.A, i.i)
 end
 
@@ -195,21 +196,21 @@ julia> g = FactorGraph([0 1 1 0;
                         0 0 1 1])
 FactorGraph{Int64} with 4 variables, 3 factors, and 5 edges
 
-julia> collect(inedges(g, factor(2)))
+julia> collect(inedges(g, f_vertex(2)))
 1-element Vector{IndexedGraphs.IndexedEdge{Int64}}:
  Indexed Edge 1 => 2 with index 1
 
 
-julia> collect(inedges(g, variable(3)))
+julia> collect(inedges(g, v_vertex(3)))
 2-element Vector{IndexedGraphs.IndexedEdge{Int64}}:
  Indexed Edge 1 => 3 with index 3
  Indexed Edge 3 => 3 with index 4
 ```
 """
-function IndexedGraphs.inedges(g::FactorGraph, a::FactorGraphVertex{Factor})
+function IndexedGraphs.inedges(g::FactorGraph, a::FactorGraphVertex{FactorVertex})
     return (IndexedEdge(i, a.i, id) for (i, id) in zip(neighbors(g, a), edge_indices(g, a)))
 end
-function IndexedGraphs.inedges(g::FactorGraph, i::FactorGraphVertex{Variable})
+function IndexedGraphs.inedges(g::FactorGraph, i::FactorGraphVertex{VariableVertex})
     return (IndexedEdge(a, i.i, id) for (a, id) in zip(neighbors(g, i), edge_indices(g, i)))
 
 end
@@ -230,20 +231,20 @@ julia> g = FactorGraph([0 1 1 0;
                         0 0 1 1])
 FactorGraph{Int64} with 4 variables, 3 factors, and 5 edges
 
-julia> collect(outedges(g, factor(2)))
+julia> collect(outedges(g, f_vertex(2)))
 1-element Vector{IndexedGraphs.IndexedEdge{Int64}}:
  Indexed Edge 2 => 1 with index 1
 
-julia> collect(outedges(g, variable(3)))
+julia> collect(outedges(g, v_vertex(3)))
 2-element Vector{IndexedGraphs.IndexedEdge{Int64}}:
  Indexed Edge 3 => 1 with index 3
  Indexed Edge 3 => 3 with index 4
 ```
 """
-function IndexedGraphs.outedges(g::FactorGraph, a::FactorGraphVertex{Factor})
+function IndexedGraphs.outedges(g::FactorGraph, a::FactorGraphVertex{FactorVertex})
     return (IndexedEdge(a.i, i, id) for (i, id) in zip(neighbors(g, a), edge_indices(g, a)))
 end
-function IndexedGraphs.outedges(g::FactorGraph, i::FactorGraphVertex{Variable})
+function IndexedGraphs.outedges(g::FactorGraph, i::FactorGraphVertex{VariableVertex})
     return (IndexedEdge(i.i, a, id) for (a, id) in zip(neighbors(g, i), edge_indices(g, i)))
 end
 
@@ -282,7 +283,7 @@ end
 for method in [:(IndexedGraphs.degree), :(IndexedGraphs.inedges), :(IndexedGraphs.outedges), :(IndexedGraphs.neighbors), :(edge_indices)]
     @eval begin
         function $method(::AbstractFactorGraph, ::Integer)
-            return throw(ArgumentError("Properties of a vertex of an `AbstractFactorGraph` such as degree, neighbors, etc. cannot be accessed by an integer. Use a `variable` or `factor` wrapper instead.\n"))
+            return throw(ArgumentError("Properties of a vertex of an `AbstractFactorGraph` such as degree, neighbors, etc. cannot be accessed by an integer. Use a `v_vertex` or `fvertex` wrapper instead.\n"))
         end
     end
 end

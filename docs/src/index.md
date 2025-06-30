@@ -38,9 +38,9 @@ FactorGraph{Int64} with 5 variables, 3 factors, and 6 edges
 
 ### Graph navigation 
 Given a factor graph with $N$ variables and $M$ factors, variables are indexed by $i\in\{1,\ldots,N\}$, factors are indexed by $a\in\{1,\ldots,M\}$.
-Properties of a vertex can be queried by wrapping the vertex index in a `variable` or `factor`. For example, the list of neighbors of variable $i=2$ is found by
+Properties of a vertex can be queried by wrapping the vertex index in a `v_vertex` or `f_vertex`. For example, the list of neighbors of variable $i=2$ is found by
 ```julia
-julia> ∂i = neighbors(g, variable(2));
+julia> ∂i = neighbors(g, v_vertex(2));
 
 julia> collect(∂i)
 2-element Vector{Int64}:
@@ -51,7 +51,7 @@ where $1,3$ are to be interpreted as indices of factor vertices.
 
 The list of edges adjacent to factor $a=1$ is found by
 ```julia
-julia> ea = inedges(g, factor(1));
+julia> ea = inedges(g, f_vertex(1));
 
 julia> collect(ea)
 3-element Vector{IndexedGraphs.IndexedEdge{Int64}}:
@@ -63,7 +63,7 @@ julia> collect(ea)
 Querying properties of a vertex without specifying whether it's a variable or a factor will throw an error
 ```julia
 julia> outedges(g, 3)
-ERROR: ArgumentError: Properties of a vertex of an `AbstractFactorGraph` such as degree, neighbors, etc. cannot be accessed by an integer. Use a `variable` or `factor` wrapper instead.
+ERROR: ArgumentError: Properties of a vertex of an `AbstractFactorGraph` such as degree, neighbors, etc. cannot be accessed by an integer. Use a `v_vertex` or `f_vertex` wrapper instead.
 ```
 
 ## See also

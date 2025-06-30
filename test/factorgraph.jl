@@ -7,15 +7,15 @@ g = FactorGraph(A)
 @testset "Basics" begin
     @test @inferred nfactors(g) == m
     @test @inferred nvariables(g) == n
-    @test all(@inferred degree(g, factor(a)) == length(@inferred neighbors(g,factor(a))) for a in factors(g))
-    @test all(@inferred degree(g, variable(i)) == length(@inferred neighbors(g,variable(i))) for i in variables(g))
+    @test all(@inferred degree(g, f_vertex(a)) == length(@inferred neighbors(g,f_vertex(a))) for a in f_vertices(g))
+    @test all(@inferred degree(g, v_vertex(i)) == length(@inferred neighbors(g,v_vertex(i))) for i in v_vertices(g))
 
     @test length(collect(@inferred edges(g))) == @inferred ne(g)
 
-    @test all(all(src(e)==a for (e,a) in zip(inedges(g, variable(i)), neighbors(g, variable(i)))) for i in variables(g))
-    @test all(all(src(e)==i for (e,i) in zip(inedges(g, factor(a)), neighbors(g, factor(a)))) for a in factors(g))
-    @test all(all(dst(e)==a for (e,a) in zip(outedges(g, variable(i)), neighbors(g, variable(i)))) for i in variables(g))
-    @test all(all(dst(e)==i for (e,i) in zip(outedges(g, factor(a)), neighbors(g, factor(a)))) for a in factors(g))
+    @test all(all(src(e)==a for (e,a) in zip(inedges(g, v_vertex(i)), neighbors(g, v_vertex(i)))) for i in v_vertices(g))
+    @test all(all(src(e)==i for (e,i) in zip(inedges(g, f_vertex(a)), neighbors(g, f_vertex(a)))) for a in f_vertices(g))
+    @test all(all(dst(e)==a for (e,a) in zip(outedges(g, v_vertex(i)), neighbors(g, v_vertex(i)))) for i in v_vertices(g))
+    @test all(all(dst(e)==i for (e,i) in zip(outedges(g, f_vertex(a)), neighbors(g, f_vertex(a)))) for a in f_vertices(g))
 
     @test_throws ArgumentError degree(g, 1)
     @test_throws ArgumentError neighbors(g, 1)
@@ -29,7 +29,7 @@ end
 end 
 
 @testset "Broadcasting" begin
-    ids = [variable(i) for i in rand(1:nvariables(g), 5)]
+    ids = [v_vertex(i) for i in rand(1:nvariables(g), 5)]
     @test degree.(g, ids) == degree.((g,), ids)
 end
 
@@ -40,8 +40,8 @@ end
     g_factorgraph = pairwise_interaction_graph(g_pairwise)
     @test all(1:n-1) do i
         neigs_pairwise = neighbors(g_pairwise, i)
-        neigs_factorgraph = reduce(vcat, neighbors(g_factorgraph, factor(a)) 
-            for a in neighbors(g_factorgraph, variable(i)); init=Int[])
+        neigs_factorgraph = reduce(vcat, neighbors(g_factorgraph, f_vertex(a)) 
+            for a in neighbors(g_factorgraph, v_vertex(i)); init=Int[])
         unique!(neigs_factorgraph)
         filter!(!isequal(i), neigs_factorgraph)
         neigs_pairwise == neigs_factorgraph
@@ -49,11 +49,11 @@ end
 end
 
 @testset "Edge indices" begin
-    @test all(variables(g)) do i
-        idx.(collect(inedges(g, variable(i)))) == edge_indices(g, variable(i))
+    @test all(v_vertices(g)) do i
+        idx.(collect(inedges(g, v_vertex(i)))) == edge_indices(g, v_vertex(i))
     end
-    @test all(factors(g)) do a
-        idx.(collect(inedges(g, factor(a)))) == edge_indices(g, factor(a))
+    @test all(f_vertices(g)) do a
+        idx.(collect(inedges(g, f_vertex(a)))) == edge_indices(g, f_vertex(a))
     end
 end
 

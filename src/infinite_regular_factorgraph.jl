@@ -13,7 +13,7 @@ struct InfiniteRegularFactorGraph{T<:Integer} <: AbstractFactorGraph{T}
     Construct an `InfiniteRegularFactorGraph` with variable degree `kᵢ` and factor degree `kₐ`
     """
     function InfiniteRegularFactorGraph(kᵢ::T, kₐ::T) where {T<:Integer}
-        kᵢ > 0 || throw(ArgumentError("Factor degree must be positive, got $kᵢ"))
+        kᵢ > 0 || throw(ArgumentError("Variable degree must be positive, got $kᵢ"))
         kₐ > 0 || throw(ArgumentError("Factor degree must be positive, got $kₐ"))
         return new{T}(kᵢ, kₐ)
     end
@@ -27,31 +27,31 @@ nvariables(::InfiniteRegularFactorGraph) = 1
 nfactors(::InfiniteRegularFactorGraph) = 1
 Graphs.ne(::InfiniteRegularFactorGraph) = 1
 Graphs.edges(::InfiniteRegularFactorGraph) = (IndexedEdge(1,1,1) for _ in 1:1)
-variables(::InfiniteRegularFactorGraph) = 1:1
-factors(::InfiniteRegularFactorGraph) = 1:1
+v_vertices(::InfiniteRegularFactorGraph) = 1:1
+f_vertices(::InfiniteRegularFactorGraph) = 1:1
 
 IndexedGraphs.degree(g::InfiniteRegularFactorGraph, v::FactorGraphVertex) = length(neighbors(g, v))
 
-function IndexedGraphs.neighbors(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{Factor})
+function IndexedGraphs.neighbors(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{FactorVertex})
     return Fill(1, g.kₐ)
 end
-function IndexedGraphs.neighbors(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{Variable})
+function IndexedGraphs.neighbors(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{VariableVertex})
     return Fill(1, g.kᵢ)
 end
 
-edge_indices(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{Factor}) = Fill(1, g.kₐ)
-edge_indices(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{Variable}) = Fill(1, g.kᵢ)
+edge_indices(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{FactorVertex}) = Fill(1, g.kₐ)
+edge_indices(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{VariableVertex}) = Fill(1, g.kᵢ)
 
-function IndexedGraphs.inedges(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{Factor})
+function IndexedGraphs.inedges(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{FactorVertex})
     return (IndexedEdge(1,1,1) for _ in 1:g.kₐ)
 end
-function IndexedGraphs.inedges(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{Variable})
+function IndexedGraphs.inedges(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{VariableVertex})
     return (IndexedEdge(1,1,1) for _ in 1:g.kᵢ)
 
 end
-function IndexedGraphs.outedges(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{Factor})
+function IndexedGraphs.outedges(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{FactorVertex})
     return (IndexedEdge(1,1,1) for _ in 1:g.kₐ)
 end
-function IndexedGraphs.outedges(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{Variable})
+function IndexedGraphs.outedges(g::InfiniteRegularFactorGraph, ::FactorGraphVertex{VariableVertex})
     return (IndexedEdge(1,1,1) for _ in 1:g.kᵢ)
 end

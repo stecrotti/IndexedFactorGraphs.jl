@@ -61,6 +61,7 @@ function pairwise_interaction_graph(g::AbstractGraph)
     A = sparse(I, J, K, E, N)
     FactorGraph(A)
 end
+pairwise_interaction_graph(A::AbstractMatrix) = pairwise_interaction_graph(IndexedGraph(A))
 
 function Base.show(io::IO, g::FactorGraph{T}) where T
     nfact = nfactors(g)

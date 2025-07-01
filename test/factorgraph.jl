@@ -38,6 +38,8 @@ end
     # to test on isolated nodes
     add_vertex!(g_pairwise)
     g_factorgraph = pairwise_interaction_graph(g_pairwise)
+    g_factorgraph_A = pairwise_interaction_graph(adjacency_matrix(g_pairwise))
+    @test adjacency_matrix(g_factorgraph) == adjacency_matrix(g_factorgraph)
     @test all(1:n-1) do i
         neigs_pairwise = neighbors(g_pairwise, i)
         neigs_factorgraph = reduce(vcat, neighbors(g_factorgraph, f_vertex(a)) 

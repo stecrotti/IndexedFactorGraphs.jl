@@ -7,15 +7,15 @@ g = FactorGraph(A)
 @testset "Basics" begin
     @test @inferred nfactors(g) == m
     @test @inferred nvariables(g) == n
-    @test all(@inferred degree(g, f_vertex(a)) == length(@inferred neighbors(g,f_vertex(a))) for a in f_vertices(g))
-    @test all(@inferred degree(g, v_vertex(i)) == length(@inferred neighbors(g,v_vertex(i))) for i in v_vertices(g))
+    @test all(@inferred degree(g, f_vertex(a)) == length(@inferred neighbors(g,f_vertex(a))) for a in eachfactor(g))
+    @test all(@inferred degree(g, v_vertex(i)) == length(@inferred neighbors(g,v_vertex(i))) for i in eachvariable(g))
 
     @test length(collect(@inferred edges(g))) == @inferred ne(g)
 
-    @test all(all(src(e)==a for (e,a) in zip(inedges(g, v_vertex(i)), neighbors(g, v_vertex(i)))) for i in v_vertices(g))
-    @test all(all(src(e)==i for (e,i) in zip(inedges(g, f_vertex(a)), neighbors(g, f_vertex(a)))) for a in f_vertices(g))
-    @test all(all(dst(e)==a for (e,a) in zip(outedges(g, v_vertex(i)), neighbors(g, v_vertex(i)))) for i in v_vertices(g))
-    @test all(all(dst(e)==i for (e,i) in zip(outedges(g, f_vertex(a)), neighbors(g, f_vertex(a)))) for a in f_vertices(g))
+    @test all(all(src(e)==a for (e,a) in zip(inedges(g, v_vertex(i)), neighbors(g, v_vertex(i)))) for i in eachvariable(g))
+    @test all(all(src(e)==i for (e,i) in zip(inedges(g, f_vertex(a)), neighbors(g, f_vertex(a)))) for a in eachfactor(g))
+    @test all(all(dst(e)==a for (e,a) in zip(outedges(g, v_vertex(i)), neighbors(g, v_vertex(i)))) for i in eachvariable(g))
+    @test all(all(dst(e)==i for (e,i) in zip(outedges(g, f_vertex(a)), neighbors(g, f_vertex(a)))) for a in eachfactor(g))
 
     @test_throws ArgumentError degree(g, 1)
     @test_throws ArgumentError neighbors(g, 1)
@@ -51,10 +51,10 @@ end
 end
 
 @testset "Edge indices" begin
-    @test all(v_vertices(g)) do i
+    @test all(eachvariable(g)) do i
         idx.(collect(inedges(g, v_vertex(i)))) == edge_indices(g, v_vertex(i))
     end
-    @test all(f_vertices(g)) do a
+    @test all(eachfactor(g)) do a
         idx.(collect(inedges(g, f_vertex(a)))) == edge_indices(g, f_vertex(a))
     end
 end

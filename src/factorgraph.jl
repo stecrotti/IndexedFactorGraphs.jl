@@ -88,18 +88,18 @@ IndexedGraphs.nv(g::FactorGraph) = nv(g.g)
 IndexedGraphs.ne(g::FactorGraph) = ne(g.g)
 
 """
-    v_vertices(g::FactorGraph)
+    eachvariable(g::FactorGraph)
 
 Return a lazy iterator to the indices of variable vertices in `g`.
 """
-v_vertices(g::FactorGraph) = 1:nvariables(g)
+eachvariable(g::FactorGraph) = 1:nvariables(g)
 
 """
-    f_vertices(g::FactorGraph)
+    eachfactor(g::FactorGraph)
 
 Return a lazy iterator to the indices of factor vertices in `g`.
 """
-f_vertices(g::FactorGraph) = 1:nfactors(g)
+eachfactor(g::FactorGraph) = 1:nfactors(g)
 
 """
     IndexedGraphs.neighbors(g::FactorGraph, v::FactorGraphVertex)

@@ -8,8 +8,8 @@ g = InfiniteRegularFactorGraph(kᵢ, kₐ)
     @test nfactors(g) == 1
     @test nvariables(g) == 1
     @test ne(g) == 1
-    @test v_vertices(g) == 1:1
-    @test f_vertices(g) == 1:1
+    @test eachvariable(g) == 1:1
+    @test eachfactor(g) == 1:1
     @test all(edges(g)) do (i, j, id)
         i == 1 && j == 1 && id == 1
     end
@@ -20,10 +20,10 @@ end
 end 
 
 @testset "Edge indices" begin
-    @test all(v_vertices(g)) do i
+    @test all(eachvariable(g)) do i
         idx.(collect(inedges(g, v_vertex(i)))) == edge_indices(g, v_vertex(i))
     end
-    @test all(f_vertices(g)) do a
+    @test all(eachfactor(g)) do a
         idx.(collect(outedges(g, f_vertex(a)))) == edge_indices(g, f_vertex(a))
     end
 end

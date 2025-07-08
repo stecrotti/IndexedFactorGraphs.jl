@@ -5,7 +5,7 @@ const VariableVertex = Right
     FactorGraphVertex
 
 A type to represent a vertex in a bipartite graph, to be passed as an argument to [`neighbors`](@ref), [`inedges`](@ref), [`outedges`](@ref), see examples therein.
-It is recommended to use the [`v_vertex`](@ref) and [`fvertex`](@ref) constructors.
+It is recommended to use the [`v_vertex`](@ref) and [`f_vertex`](@ref) constructors.
 """
 const FactorGraphVertex = BipartiteGraphVertex
 
@@ -284,7 +284,7 @@ end
 for method in [:(IndexedGraphs.degree), :(IndexedGraphs.inedges), :(IndexedGraphs.outedges), :(IndexedGraphs.neighbors), :(edge_indices)]
     @eval begin
         function $method(::AbstractFactorGraph, ::Integer)
-            return throw(ArgumentError("Properties of a vertex of an `AbstractFactorGraph` such as degree, neighbors, etc. cannot be accessed by an integer. Use a `v_vertex` or `fvertex` wrapper instead.\n"))
+            return throw(ArgumentError("Properties of a vertex of an `AbstractFactorGraph` such as degree, neighbors, etc. cannot be accessed by an integer. Use a `v_vertex` or `f_vertex` wrapper instead.\n"))
         end
     end
 end

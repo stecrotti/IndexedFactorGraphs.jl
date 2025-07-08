@@ -27,8 +27,8 @@ nvariables(::InfiniteRegularFactorGraph) = 1
 nfactors(::InfiniteRegularFactorGraph) = 1
 Graphs.ne(::InfiniteRegularFactorGraph) = 1
 Graphs.edges(::InfiniteRegularFactorGraph) = (IndexedEdge(1,1,1) for _ in 1:1)
-v_vertices(::InfiniteRegularFactorGraph) = 1:1
-f_vertices(::InfiniteRegularFactorGraph) = 1:1
+eachvariable(::InfiniteRegularFactorGraph) = 1:1
+eachfactor(::InfiniteRegularFactorGraph) = 1:1
 
 IndexedGraphs.degree(g::InfiniteRegularFactorGraph, v::FactorGraphVertex) = length(neighbors(g, v))
 
